@@ -3,45 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NMS Language Translator</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>NMS·LINGUA DECODER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
-  <main class="app">
-    <header>
-      <h1>NMS Language Translator</h1>
-      <p class="sub">Paste romanized alien text. It detects the language and translates to English.</p>
-    </header>
+  <main class="wrap">
+    <section class="crt" id="crt">
+      <div class="crt-content">
+        <header class="hdr">
+          <h1 class="title">NMS·LINGUA <span class="title-dim">DECODER</span></h1>
+          <div class="status">V11 · SIGNAL ONLINE <span class="blink">▮</span></div>
+        </header>
 
-    <section class="io">
-      <div class="controls">
-        <label for="lang-select">Language</label>
-        <select id="lang-select">
-          <option value="auto">Auto-detect</option>
-          <option value="Gek">Gek</option>
-          <option value="Korvax">Korvax</option>
-          <option value="Vy'keen">Vy'keen</option>
-          <option value="Autophage">Autophage</option>
-          <option value="Atlas">Atlas</option>
-        </select>
+        <div class="label">◢ INPUT SIGNAL</div>
+        <div class="ta-wrap">
+          <textarea id="input" placeholder="> enter alien language…"
+                    autocomplete="off" spellcheck="false"></textarea>
+        </div>
+
+        <label class="upload soon-state" for="photo" title="Not available yet">
+          <span class="upload-glyph">▲</span>
+          <span id="upload-text">IMAGE → TEXT (OCR)</span>
+          <span class="soon-badge" id="upload-badge">COMING SOON</span>
+          <input type="file" id="photo" accept="image/*" hidden>
+        </label>
+
+        <div class="label">◢ SOURCE LANGUAGE</div>
+        <div class="chips" id="chips">
+          <button class="chip" data-lang="auto">AUTO</button>
+          <button class="chip" data-lang="Gek">GEK</button>
+          <button class="chip" data-lang="Korvax">KORVAX</button>
+          <button class="chip" data-lang="Vy'keen">VY'KEEN</button>
+          <button class="chip" data-lang="Autophage">AUTOPHAGE</button>
+          <button class="chip" data-lang="Atlas">ATLAS</button>
+        </div>
+
+        <div class="readout">
+          <span class="readout-label" id="readout-label">STATUS ▸</span>
+          <span class="readout-value" id="readout-value">AWAITING INPUT</span>
+          <div class="meter" id="meter"></div>
+          <span class="tokens" id="tokens"></span>
+        </div>
+
+        <div class="label">◢ TRANSLATED OUTPUT</div>
+        <div class="output" id="output"></div>
+
+        <footer class="foot" id="foot">INITIALISING DICTIONARY…</footer>
       </div>
 
-      <label for="input">Alien text</label>
-      <textarea id="input" placeholder="e.g. evykelordur" autocomplete="off" spellcheck="false"></textarea>
-
-      <div class="detected" id="detected" hidden>
-        <span id="lang-label">Detected language:</span> <strong id="lang-name"></strong>
-        <span id="lang-conf" class="conf"></span>
-      </div>
-
-      <label for="output">English</label>
-      <output id="output" class="output" aria-live="polite"></output>
+      <div class="crt-scanlines" aria-hidden="true"></div>
+      <div class="crt-vignette" aria-hidden="true"></div>
+      <div class="crt-sweep" aria-hidden="true"></div>
     </section>
-
-    <footer>
-      <span id="status">Loading dictionary…</span>
-    </footer>
   </main>
-  <script src="app.js"></script>
+
+  <script src="engine.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

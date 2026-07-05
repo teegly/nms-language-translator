@@ -1,0 +1,25 @@
+# Game files / executable — never commit (large, copyrighted)
+Binaries/
+*.exe
+*.dll
+*.pak
+*.mbin
+*.MBIN
+No-Mans-Sky*/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Scratch / editor / tooling
+*.log
+.DS_Store
+.vscode/
+.idea/
+.claude/
+
+# Internal working docs — kept local, not published
+SPEC.md
+RE_FINDINGS.md

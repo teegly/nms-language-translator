@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NMS Language Translator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>NMS Language Translator</h1>
+      <p class="sub">Paste romanized alien text. It detects the language and translates to English.</p>
+    </header>
+
+    <section class="io">
+      <div class="controls">
+        <label for="lang-select">Language</label>
+        <select id="lang-select">
+          <option value="auto">Auto-detect</option>
+          <option value="Gek">Gek</option>
+          <option value="Korvax">Korvax</option>
+          <option value="Vy'keen">Vy'keen</option>
+          <option value="Autophage">Autophage</option>
+          <option value="Atlas">Atlas</option>
+        </select>
+      </div>
+
+      <label for="input">Alien text</label>
+      <textarea id="input" placeholder="e.g. evykelordur" autocomplete="off" spellcheck="false"></textarea>
+
+      <div class="detected" id="detected" hidden>
+        <span id="lang-label">Detected language:</span> <strong id="lang-name"></strong>
+        <span id="lang-conf" class="conf"></span>
+      </div>
+
+      <label for="output">English</label>
+      <output id="output" class="output" aria-live="polite"></output>
+    </section>
+
+    <footer>
+      <span id="status">Loading dictionary…</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

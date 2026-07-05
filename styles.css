@@ -1,0 +1,119 @@
+:root {
+  --bg: #0a0e14;
+  --panel: #121822;
+  --panel-2: #0e131c;
+  --border: #223047;
+  --text: #d7e0ee;
+  --muted: #7f8ea6;
+  --accent: #46c8ff;
+  --accent-dim: #1c3d4f;
+  --ok: #7be0a4;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 50% -10%, #10202e 0%, var(--bg) 60%);
+  color: var(--text);
+  font: 16px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 20px 32px;
+}
+
+header h1 {
+  margin: 0 0 6px;
+  font-size: 1.7rem;
+  letter-spacing: 0.02em;
+}
+.sub { margin: 0 0 28px; color: var(--muted); }
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.controls {
+  margin: 0 0 18px;
+}
+select {
+  width: 100%;
+  max-width: 260px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 12px;
+  font: inherit;
+}
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(70, 200, 255, 0.15);
+}
+
+textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 1.15rem;
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(70, 200, 255, 0.15);
+}
+
+.detected {
+  margin: 18px 0 22px;
+  padding: 10px 14px;
+  background: var(--accent-dim);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.detected strong { color: var(--accent); }
+.conf { color: var(--muted); margin-left: 8px; font-size: 0.85rem; }
+
+.output {
+  display: block;
+  min-height: 90px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 1.15rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.output .passthrough { color: var(--muted); font-style: italic; }
+
+footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+#status.error { color: #ff8a8a; }
+
+@media (max-width: 480px) {
+  .app { padding: 28px 14px 24px; }
+  header h1 { font-size: 1.35rem; }
+  .sub { font-size: 0.9rem; margin-bottom: 22px; }
+  textarea, .output { font-size: 1.05rem; }
+  select { max-width: 100%; }
+}

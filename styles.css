@@ -59,10 +59,10 @@ body {
 /* ---- header ---- */
 .hdr {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   border-bottom: 1px solid var(--b-soft);
   padding-bottom: 14px;
   margin-bottom: 22px;
@@ -78,7 +78,7 @@ body {
   text-shadow: 0 0 10px rgba(80, 255, 150, .55);
 }
 .title-dim { color: var(--dimmer); }
-.brand { display: flex; flex-direction: column; gap: 6px; }
+.brand { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
 .tagline {
   margin: 0;
   font-size: 12px;
@@ -86,8 +86,10 @@ body {
   color: var(--dim);
 }
 .status {
-  font-size: 11px;
-  letter-spacing: .28em;
+  flex-shrink: 0;
+  padding-top: 5px;
+  font-size: 10px;
+  letter-spacing: .2em;
   color: var(--dimmer);
   white-space: nowrap;
 }
@@ -184,8 +186,8 @@ body {
 .readout {
   display: flex;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: 10px;
+  flex-wrap: nowrap;
   margin: 20px 0 9px;
   padding: 11px 15px;
   border: 1px solid var(--b-soft);
@@ -199,13 +201,15 @@ body {
 }
 .readout-value {
   font-family: 'VT323', monospace;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   letter-spacing: .04em;
   color: var(--mid);
   text-shadow: 0 0 10px rgba(80, 255, 150, .5);
+  white-space: nowrap;
 }
-.meter { display: flex; gap: 3px; margin-left: auto; }
+.readout-label { white-space: nowrap; }
+.meter { display: flex; gap: 3px; margin-left: auto; flex-shrink: 0; }
 .cell { width: 9px; height: 13px; border-radius: 1px; background: var(--cell-off); }
 .cell.on { background: var(--accent); box-shadow: 0 0 7px rgba(80, 255, 150, .6); }
 .tokens {
@@ -297,5 +301,12 @@ body {
 @media (max-width: 480px) {
   body { padding: 20px 10px; }
   .crt-content { padding: 20px 16px 18px; }
-  .title { font-size: 28px; }
+  .title { font-size: 26px; }
+  /* keep the readout on one line on narrow screens */
+  .readout { gap: 8px; padding: 10px 12px; }
+  .readout-label { font-size: 10px; letter-spacing: .1em; }
+  .readout-value { font-size: 18px; }
+  .cell { width: 6px; height: 11px; }
+  .meter { gap: 2px; }
+  .tokens { min-width: 0; font-size: 10px; letter-spacing: .06em; }
 }

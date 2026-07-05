@@ -23,3 +23,6 @@ venv/
 # Internal working docs — kept local, not published
 SPEC.md
 RE_FINDINGS.md
+
+# Design handoff reference — kept local
+design/

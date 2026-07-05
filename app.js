@@ -12,8 +12,6 @@ const el = {
   meter: document.getElementById("meter"),
   tokens: document.getElementById("tokens"),
   foot: document.getElementById("foot"),
-  photo: document.getElementById("photo"),
-  uploadText: document.getElementById("upload-text"),
 };
 
 let LANGS = null;
@@ -112,11 +110,8 @@ el.chips.forEach((chip) => {
   });
 });
 
-el.photo.addEventListener("change", () => {
-  const f = el.photo.files && el.photo.files[0];
-  el.uploadText.textContent = f ? "IMG: " + f.name : "IMAGE → TEXT (OCR)";
-  // badge stays "COMING SOON" — OCR not wired yet
-});
+// Photo upload is intentionally a static COMING SOON placeholder — no file
+// input, no picker, until OCR (T16) is actually wired.
 
 // ---- load ----
 window.NMSEngine.loadLangs()

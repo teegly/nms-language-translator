@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NMS·LINGUA DECODER</title>
+  <title>No Man's Sky Alien Language Translator · LINGUA DECODER</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
   <main class="wrap">
     <section class="crt" id="crt">
       <div class="crt-content">
         <header class="hdr">
-          <h1 class="title">NMS·LINGUA <span class="title-dim">DECODER</span></h1>
+          <div class="brand">
+            <h1 class="title">LINGUA <span class="title-dim">DECODER</span></h1>
+            <p class="tagline">No Man's Sky Translator</p>
+          </div>
           <div class="status">V11 · SIGNAL ONLINE <span class="blink">▮</span></div>
         </header>
 
@@ -24,12 +27,11 @@
                     autocomplete="off" spellcheck="false"></textarea>
         </div>
 
-        <label class="upload soon-state" for="photo" title="Not available yet">
+        <div class="upload soon-state" title="Not available yet" aria-disabled="true">
           <span class="upload-glyph">▲</span>
-          <span id="upload-text">IMAGE → TEXT (OCR)</span>
-          <span class="soon-badge" id="upload-badge">COMING SOON</span>
-          <input type="file" id="photo" accept="image/*" hidden>
-        </label>
+          <span>IMAGE → TEXT (OCR)</span>
+          <span class="soon-badge">COMING SOON</span>
+        </div>
 
         <div class="label">◢ SOURCE LANGUAGE</div>
         <div class="chips" id="chips">
@@ -58,9 +60,14 @@
       <div class="crt-vignette" aria-hidden="true"></div>
       <div class="crt-sweep" aria-hidden="true"></div>
     </section>
+
+    <footer class="page-footer">
+      Unofficial fan project. Not affiliated with or endorsed by Hello Games.<br>
+      No Man's Sky is a trademark of Hello Games.
+    </footer>
   </main>
 
   <script src="engine.js?v=2"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

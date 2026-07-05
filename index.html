@@ -7,12 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <main class="wrap">
     <div class="topbar">
-      <span class="status">V11 · SIGNAL ONLINE <span class="blink">▮</span></span>
+      <span class="status">V11 · SIGNAL ONLINE <span class="blink" aria-hidden="true">▮</span></span>
     </div>
     <section class="crt" id="crt">
       <div class="crt-content">
@@ -23,37 +23,37 @@
           </div>
         </header>
 
-        <div class="label">◢ INPUT SIGNAL</div>
+        <label class="label" for="input"><span aria-hidden="true">◢</span> INPUT SIGNAL</label>
         <div class="ta-wrap">
           <textarea id="input" placeholder="> enter alien language…"
                     autocomplete="off" spellcheck="false"></textarea>
         </div>
 
         <div class="upload soon-state" title="Not available yet" aria-disabled="true">
-          <span class="upload-glyph">▲</span>
+          <span class="upload-glyph" aria-hidden="true">▲</span>
           <span>IMAGE → TEXT (OCR)</span>
           <span class="soon-badge">COMING SOON</span>
         </div>
 
-        <div class="label">◢ SOURCE LANGUAGE</div>
-        <div class="chips" id="chips">
-          <button class="chip" data-lang="auto">AUTO</button>
-          <button class="chip" data-lang="Gek">GEK</button>
-          <button class="chip" data-lang="Korvax">KORVAX</button>
-          <button class="chip" data-lang="Vy'keen">VY'KEEN</button>
-          <button class="chip" data-lang="Autophage">AUTOPHAGE</button>
-          <button class="chip" data-lang="Atlas">ATLAS</button>
+        <div class="label" id="lang-label"><span aria-hidden="true">◢</span> SOURCE LANGUAGE</div>
+        <div class="chips" id="chips" role="group" aria-labelledby="lang-label">
+          <button class="chip" type="button" data-lang="auto" aria-pressed="true">AUTO</button>
+          <button class="chip" type="button" data-lang="Gek" aria-pressed="false">GEK</button>
+          <button class="chip" type="button" data-lang="Korvax" aria-pressed="false">KORVAX</button>
+          <button class="chip" type="button" data-lang="Vy'keen" aria-pressed="false">VY'KEEN</button>
+          <button class="chip" type="button" data-lang="Autophage" aria-pressed="false">AUTOPHAGE</button>
+          <button class="chip" type="button" data-lang="Atlas" aria-pressed="false">ATLAS</button>
         </div>
 
-        <div class="readout">
-          <span class="readout-label" id="readout-label">STATUS ▸</span>
+        <div class="readout" role="status" aria-live="polite">
+          <span class="readout-label"><span id="readout-word">STATUS</span> <span aria-hidden="true">▸</span></span>
           <span class="readout-value" id="readout-value">AWAITING INPUT</span>
-          <div class="meter" id="meter"></div>
+          <div class="meter" id="meter" aria-hidden="true"></div>
           <span class="tokens" id="tokens"></span>
         </div>
 
-        <div class="label">◢ TRANSLATED OUTPUT</div>
-        <div class="output" id="output"></div>
+        <div class="label" id="output-label"><span aria-hidden="true">◢</span> TRANSLATED OUTPUT</div>
+        <div class="output" id="output" aria-live="polite" aria-labelledby="output-label"></div>
 
         <footer class="foot" id="foot">INITIALISING DICTIONARY…</footer>
       </div>
@@ -71,6 +71,6 @@
   </main>
 
   <script src="engine.js?v=2"></script>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

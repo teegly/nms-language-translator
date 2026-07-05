@@ -7,7 +7,7 @@ const el = {
   input: document.getElementById("input"),
   output: document.getElementById("output"),
   chips: Array.from(document.querySelectorAll(".chip")),
-  readoutLabel: document.getElementById("readout-label"),
+  readoutWord: document.getElementById("readout-word"),
   readoutValue: document.getElementById("readout-value"),
   meter: document.getElementById("meter"),
   tokens: document.getElementById("tokens"),
@@ -39,13 +39,10 @@ function updateChips(detectedLang) {
   for (const chip of el.chips) {
     const lang = chip.dataset.lang;
     chip.classList.remove("active", "detected");
-    if (lang === "auto") {
-      if (!override) chip.classList.add("active");
-    } else if (override === lang) {
-      chip.classList.add("active");
-    } else if (!override && detectedLang === lang) {
-      chip.classList.add("detected");
-    }
+    const active = lang === "auto" ? !override : override === lang;
+    if (active) chip.classList.add("active");
+    else if (!override && detectedLang === lang) chip.classList.add("detected");
+    chip.setAttribute("aria-pressed", active ? "true" : "false");
   }
 }
 
@@ -62,7 +59,7 @@ function renderOutput(segments) {
 
 function renderEmpty() {
   el.output.className = "output empty";
-  el.output.innerHTML = '<span class="blink cursor">▮</span>';
+  el.output.innerHTML = '<span class="blink cursor" aria-hidden="true">▮</span>';
 }
 
 function render() {
@@ -71,7 +68,7 @@ function render() {
   if (!result) {
     // empty input (or not yet loaded)
     updateChips(null);
-    el.readoutLabel.textContent = "STATUS ▸";
+    el.readoutWord.textContent = "STATUS";
     el.readoutValue.textContent = "AWAITING INPUT";
     setMeter(0);
     el.tokens.textContent = "";
@@ -82,7 +79,7 @@ function render() {
   if (!result.lang) {
     // no match
     updateChips(null);
-    el.readoutLabel.textContent = "STATUS ▸";
+    el.readoutWord.textContent = "STATUS";
     el.readoutValue.textContent = "NO MATCH";
     setMeter(0);
     el.tokens.textContent = result.count + " / " + result.total;
@@ -91,7 +88,7 @@ function render() {
   }
 
   updateChips(result.lang);
-  el.readoutLabel.textContent = "DETECTED ▸";
+  el.readoutWord.textContent = "DETECTED";
   el.readoutValue.textContent = result.lang.toUpperCase();
   setMeter(Math.round((result.count / result.total) * 10));
   el.tokens.textContent = result.count + " / " + result.total;

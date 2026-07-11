@@ -131,7 +131,7 @@ body {
 #input::-webkit-scrollbar { width: 8px; }
 #input::-webkit-scrollbar-thumb { background: var(--b-default); border-radius: 4px; }
 
-/* ---- upload (photo -> OCR) ---- */
+/* ---- upload placeholder ---- */
 .upload {
   display: flex;
   align-items: center;
@@ -146,44 +146,17 @@ body {
   background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(40, 255, 130, .03) 8px, rgba(40, 255, 130, .03) 16px);
 }
 .upload-glyph { font-size: 16px; }
-.upload-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  color: var(--dim);
-  transition: color .12s, text-shadow .12s;
-}
-.upload-btn:hover,
-.upload-input:focus-visible + .upload-btn {
-  color: var(--mid);
-  text-shadow: 0 0 8px rgba(80, 255, 150, .4);
-}
-/* visually-hidden file input; the label is the visible control */
-.upload-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-.upload-input:focus-visible + .upload-btn {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-.ocr-status {
+/* not-ready state: obviously a coming-soon feature, not clickable */
+.upload.soon-state { opacity: .55; cursor: not-allowed; }
+.soon-badge {
   margin-left: auto;
-  font-size: 11px;
-  letter-spacing: .16em;
-  color: var(--dim);
-  text-align: right;
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--bg-base);
+  background: var(--dimmer);
+  border-radius: 4px;
+  padding: 3px 7px;
 }
-.ocr-status.busy { color: var(--mid); }
-.ocr-status.error { color: #ff9a9a; }
 
 /* ---- chips ---- */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }

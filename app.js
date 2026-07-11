@@ -12,6 +12,8 @@ const el = {
   meter: document.getElementById("meter"),
   tokens: document.getElementById("tokens"),
   foot: document.getElementById("foot"),
+  photo: document.getElementById("photo"),
+  ocrStatus: document.getElementById("ocr-status"),
 };
 
 let LANGS = null;
@@ -107,8 +109,65 @@ el.chips.forEach((chip) => {
   });
 });
 
-// Photo upload is intentionally a static COMING SOON placeholder — no file
-// input, no picker, until OCR (T16) is actually wired.
+// ---- photo OCR (T16) ----
+// Tesseract.js is lazy-loaded from the CDN the first time the user picks an
+// image, so the ~2MB OCR engine costs nothing on a normal text translation.
+// OCR text lands in the #input textarea (user can edit it) and the existing
+// input handler translates it — no new translation path.
+const TESSERACT_SRC = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+let tesseractLoader = null;
+
+function loadTesseract() {
+  if (!tesseractLoader) {
+    tesseractLoader = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = TESSERACT_SRC;
+      s.onload = () => resolve(window.Tesseract);
+      s.onerror = () => reject(new Error("could not load OCR engine"));
+      document.head.appendChild(s);
+    });
+  }
+  return tesseractLoader;
+}
+
+function setOcrStatus(text, state) {
+  el.ocrStatus.textContent = text;
+  el.ocrStatus.className = "ocr-status" + (state ? " " + state : "");
+}
+
+function runOcr(file) {
+  setOcrStatus("LOADING OCR…", "busy");
+  loadTesseract()
+    .then((Tesseract) => {
+      setOcrStatus("SCANNING 0%", "busy");
+      return Tesseract.recognize(file, "eng", {
+        logger: (m) => {
+          if (m.status === "recognizing text") {
+            setOcrStatus("SCANNING " + Math.round(m.progress * 100) + "%", "busy");
+          }
+        },
+      });
+    })
+    .then(({ data }) => {
+      const text = (data.text || "").trim();
+      if (!text) {
+        setOcrStatus("NO TEXT FOUND — TRY A CLEARER IMAGE", "error");
+        return;
+      }
+      el.input.value = text;
+      el.input.dispatchEvent(new Event("input"));
+      setOcrStatus("SCANNED ✓ EDIT ABOVE IF NEEDED", "");
+    })
+    .catch((err) => {
+      setOcrStatus("⚠ OCR FAILED — " + err.message, "error");
+    });
+}
+
+el.photo.addEventListener("change", () => {
+  const file = el.photo.files && el.photo.files[0];
+  if (file) runOcr(file);
+  el.photo.value = ""; // let the user re-pick the same file
+});
 
 // ---- load ----
 window.NMSEngine.loadLangs()

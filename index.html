@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=14">
 
   <script type="application/ld+json">
   {
@@ -70,10 +70,14 @@
                     autocomplete="off" spellcheck="false"></textarea>
         </div>
 
-        <div class="upload soon-state" title="Not available yet" aria-disabled="true">
-          <span class="upload-glyph" aria-hidden="true">▲</span>
-          <span>IMAGE → TEXT (OCR)</span>
-          <span class="soon-badge">COMING SOON</span>
+        <div class="upload" id="upload">
+          <label class="upload-btn" for="photo">
+            <span class="upload-glyph" aria-hidden="true">▲</span>
+            <span>IMAGE → TEXT (OCR)</span>
+          </label>
+          <input type="file" id="photo" class="upload-input" accept="image/*"
+                 aria-describedby="ocr-status">
+          <span class="ocr-status" id="ocr-status" role="status" aria-live="polite"></span>
         </div>
 
         <div class="label" id="lang-label"><span aria-hidden="true">◢</span> SOURCE LANGUAGE</div>
@@ -112,6 +116,6 @@
   </main>
 
   <script src="engine.js?v=2"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

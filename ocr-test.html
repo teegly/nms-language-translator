@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>OCR DIAGNOSTIC · LINGUA DECODER</title>
+  <style>
+    body { margin: 0; padding: 20px 14px; background: #010503; color: #7dffaf;
+           font-family: ui-monospace, "IBM Plex Mono", monospace; line-height: 1.5; }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    h1 { font-size: 20px; color: #7dffaf; }
+    p, li { color: #4ea877; font-size: 13px; }
+    .card { border: 1px solid #1e5a3a; border-radius: 9px; padding: 14px; margin: 14px 0;
+            background: #04120a; }
+    .card h2 { font-size: 13px; letter-spacing: .12em; color: #7dffaf; margin: 0 0 8px; }
+    input[type=file] { color: #7dffaf; font-size: 14px; }
+    textarea { width: 100%; min-height: 70px; background: #030a06; color: #c8ffdc;
+               border: 1px solid #1e5a3a; border-radius: 7px; padding: 10px;
+               font: 14px/1.5 ui-monospace, monospace; resize: vertical; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; margin-top: 6px; }
+    .tag { color: #3d8560; }
+    .val { color: #7dffaf; }
+    .status { color: #4ea877; font-size: 13px; min-height: 18px; }
+    .status.err { color: #ff9a9a; }
+    img.prev { max-width: 100%; border: 1px solid #1e5a3a; border-radius: 7px; margin-top: 8px; }
+    .hint { color: #356b50; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>OCR DIAGNOSTIC</h1>
+    <p>Pick a No Man's Sky dialogue screenshot. This runs OCR two ways and shows what each reads, plus whether it translates. <strong>Copy the whole RESULTS box back to Claude.</strong> Nothing is uploaded anywhere; all processing is in your browser.</p>
+
+    <div class="card">
+      <h2>1 · PICK IMAGE</h2>
+      <input type="file" id="photo" accept="image/*">
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>2 · RESULTS (copy all of this back)</h2>
+      <textarea id="results" readonly placeholder="results appear here after you pick an image…"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>3 · WHAT OCR SAW (preprocessed)</h2>
+      <img class="prev" id="preview" alt="preprocessed image preview" hidden>
+      <div class="hint">If the text here is unreadable, so is the OCR. Try a tighter crop around just the subtitle.</div>
+    </div>
+  </div>
+
+  <script src="engine.js?v=2"></script>
+  <script>
+  "use strict";
+  const TESSERACT_SRC = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+  const $ = (id) => document.getElementById(id);
+  let LANGS = null, tLoader = null;
+
+  function setStatus(t, err) { $("status").textContent = t; $("status").className = "status" + (err ? " err" : ""); }
+
+  function loadTesseract() {
+    if (!tLoader) tLoader = new Promise((res, rej) => {
+      const s = document.createElement("script");
+      s.src = TESSERACT_SRC; s.onload = () => res(window.Tesseract);
+      s.onerror = () => rej(new Error("could not load OCR engine")); document.head.appendChild(s);
+    });
+    return tLoader;
+  }
+
+  // upscale 2x, grayscale, threshold to high-contrast B/W
+  function preprocess(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = 2, cv = document.createElement("canvas");
+        cv.width = img.naturalWidth * scale; cv.height = img.naturalHeight * scale;
+        const ctx = cv.getContext("2d"); ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        const id = ctx.getImageData(0, 0, cv.width, cv.height), d = id.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+          const v = lum > 110 ? 255 : 0;
+          d[i] = d[i + 1] = d[i + 2] = v;
+        }
+        ctx.putImageData(id, 0, 0); URL.revokeObjectURL(img.src); resolve(cv);
+      };
+      img.onerror = () => { URL.revokeObjectURL(img.src); reject(new Error("could not read image")); };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  function translateLine(text) {
+    const r = window.NMSEngine.analyze(LANGS, text, null);
+    if (!r) return "(empty)";
+    if (!r.lang) return "NO MATCH (0/" + r.total + ")";
+    return r.lang + " " + r.count + "/" + r.total + " -> " +
+      r.segments.map(s => s.matched ? "[" + s.text + "]" : s.text).join(" ");
+  }
+
+  async function run(file) {
+    try {
+      setStatus("loading OCR engine…");
+      const T = await loadTesseract();
+      if (!LANGS) LANGS = (await window.NMSEngine.loadLangs()).LANGS;
+
+      setStatus("running RAW OCR…");
+      const rawRes = await T.recognize(file, "eng");
+      const rawText = (rawRes.data.text || "").trim();
+
+      setStatus("preprocessing + OCR…");
+      const canvas = await preprocess(file);
+      $("preview").src = canvas.toDataURL("image/png"); $("preview").hidden = false;
+      const worker = await T.createWorker("eng", 1);
+      await worker.setParameters({
+        tessedit_char_whitelist: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' .,?!;:-",
+        tessedit_pageseg_mode: "6"
+      });
+      const preRes = await worker.recognize(canvas);
+      await worker.terminate();
+      const preText = (preRes.data.text || "").trim();
+
+      const out =
+        "=== RAW OCR ===\n" + (rawText || "(nothing)") +
+        "\n-> " + translateLine(rawText) +
+        "\n\n=== PREPROCESSED OCR ===\n" + (preText || "(nothing)") +
+        "\n-> " + translateLine(preText);
+      $("results").value = out;
+      setStatus("done. copy the RESULTS box back to Claude.");
+    } catch (e) {
+      setStatus("failed: " + e.message, true);
+    }
+  }
+
+  $("photo").addEventListener("change", () => {
+    const f = $("photo").files && $("photo").files[0];
+    if (f) run(f);
+    $("photo").value = "";
+  });
+  </script>
+</body>
+</html>
